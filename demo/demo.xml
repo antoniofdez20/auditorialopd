@@ -1,0 +1,64 @@
+<odoo>
+    <!-- Al tener noupdate=0 el usuario no podrá realizar cambios en los siguientes campos, una vez de actualice el
+    modulo se volveran a cargar estos datos -->
+    <data noupdate="0">
+        <!-- Crear representantes -->
+        <record id="representante1" model="auditorialopd.representante">
+            <field name="dni">12345678A</field>
+            <field name="nombre">Juan</field>
+            <field name="apellidos">Pérez</field>
+            <field name="tlf">600123123</field>
+            <field name="email">juan.perez@example.com</field>
+            <field name="funcion">gestor</field>
+        </record>
+
+        <record id="representante2" model="auditorialopd.representante">
+            <field name="dni">87654321B</field>
+            <field name="nombre">Ana</field>
+            <field name="apellidos">Gómez</field>
+            <field name="tlf">600456456</field>
+            <field name="email">ana.gomez@example.com</field>
+            <field name="funcion">seguridad</field>
+        </record>
+    </data>
+    <!-- Al tener noupdate=1 el usuario podrá realizar cambios y esos cambios se conservaran en los siguientes campos,
+    ya que las actualizaciones no destruiran los cambios realizados por el usuario -->
+    <data noupdate="1">
+        <!-- Crear clientes y asignar los representantes creados -->
+        <record id="cliente1" model="auditorialopd.cliente">
+            <field name="cif">A12345678</field>
+            <field name="nombre">Empresa 1</field>
+            <field name="direccion_fiscal">Calle Falsa 123</field>
+            <field name="iban">ES1234567890123456789012</field>
+            <field name="representante_id" ref="representante1"/>
+        </record>
+
+        <record id="cliente2" model="auditorialopd.cliente">
+            <field name="cif">B87654321</field>
+            <field name="nombre">Empresa 2</field>
+            <field name="direccion_fiscal">Avenida de la Verdad 456</field>
+            <field name="iban">ES2109876543210987654321</field>
+            <field name="representante_id" ref="representante2"/>
+        </record>
+
+        <!-- Datos de ejemplo de auditorias -->
+        <record id="auditoria1" model="auditorialopd.auditoria">
+            <field name="codigo">AUD-0001</field>
+            <field name="fecha_inicio">2024-01-01 08:00:00</field>
+            <field name="fecha_final">2024-01-01 12:00:00</field>
+            <field name="resumen_informe">Resumen de la auditoría 1</field>
+            <field name="cliente" ref="cliente1"/> <!-- Esto establece una relación Many2one -->
+            <field name="empleado" eval="17"/> <!-- Haciendo referencia al empleado con id 17 -->
+        </record>
+
+        <record id="auditoria2" model="auditorialopd.auditoria">
+            <field name="codigo">AUD-0002</field>
+            <field name="fecha_inicio">2024-02-01 09:00:00</field>
+            <field name="fecha_final">2024-02-01 14:00:00</field>
+            <field name="resumen_informe">Resumen de la auditoría 2</field>
+            <field name="cliente" ref="cliente2"/> <!-- Esto establece una relación Many2one -->
+            <field name="empleado" eval="6"/> <!-- Haciendo referencia al empleado con id 18 -->
+        </record>
+    </data>
+</odoo>
+

@@ -1,0 +1,163 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="auditorialopd.auditoria_list">
+      <field name="name">Auditorias</field>
+      <field name="model">auditorialopd.auditoria</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="codigo"/>
+          <field name="fecha_inicio" string="Fecha inicio estimada"/>
+          <field name="fecha_final" string="Fecha final estimada"/>
+          <field name="cliente"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Explicit form para una auditoria -->
+    <record model="ir.ui.view" id="auditorialopd.auditoria_form">
+        <field name="name">Auditoria form</field>
+        <field name="model">auditorialopd.auditoria</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auditoria">
+                <sheet>
+                    <group>
+                      <field name="codigo"/>
+                      <field name="fecha_inicio" string="Fecha inicio estimada"/>
+                      <field name="fecha_final" string="Fecha final estimada"/>
+                      <field name="resumen_informe"/>
+                      <field name="cliente" widget="selection"/>
+                      <field name="empleado" widget="selection"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de calendario para auditorias -->
+    <record model="ir.ui.view" id="auditorialopd.auditoria_calendar">
+        <field name="name">Auditoria calendar</field>
+        <field name="model">auditorialopd.auditoria</field>
+        <field name="arch" type="xml">
+            <calendar string="Auditoria Calendar" date_start="fecha_inicio" date_stop="fecha_final" color="cliente" mode="month">
+                <field name="codigo"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="auditorialopd.auditoria_action_window">
+        <field name="name">Auditorias</field>
+        <field name="res_model">auditorialopd.auditoria</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_opened': True}</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="auditorialopd.auditoria_calendar_action_window">
+        <field name="name">Calendario auditorias</field>
+        <field name="res_model">auditorialopd.auditoria</field>
+        <field name="view_mode">calendar</field>
+        <field name="context">{'default_codigo': 'AUD-XXXX'}</field>
+    </record>
+
+    <!-- vista kanban para los clientes de las auditorias -->
+    <record model="ir.ui.view" id="auditorialopd.cliente_kanban_view">
+        <field name="name">cliente.kanban</field>
+        <field name="model">auditorialopd.cliente</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_view">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <div class="column">
+                                <div class="col-12 col-lg-4">
+                                    <img src="/auditorialopd/static/src/img/logo_empresa.png" style="max-width: 100%; height: auto; max-height: 120px;" alt="Logo empresa"/>
+                                </div>
+                                <div class="col-12 col-lg-8">
+                                    <div class="o_kanban_details">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="nombre"/>
+                                        </strong>
+                                        <div class="o_kanban_record_subtitle">
+                                            <field name="cif"/>
+                                        </div>
+                                        <div class="mt-2">
+                                            <field name="direccion_fiscal"/>
+                                        </div>
+                                        <div class="mt-2">
+                                            <field name="iban"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="auditorialopd.cliente_form">
+        <field name="name">Cliente form</field>
+        <field name="model">auditorialopd.cliente</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Cliente">
+                <sheet>
+                    <group>
+                      <field name="nombre"/>
+                      <field name="cif"/>
+                      <field name="direccion_fiscal"/>
+                      <field name="direccion_social"/>
+                      <field name="iban"/>
+                      <field name="representante_id" widget="selection"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="auditorialopd.cliente_action_window">
+        <field name="name">Clientes</field>
+        <field name="res_model">auditorialopd.cliente</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear un nuevo cliente
+            </p>
+        </field>
+    </record>
+
+    <!-- server action to the one above -->
+    <record model="ir.actions.server" id="auditorialopd.auditoria_action_server">
+      <field name="name">auditorialopd server</field>
+      <field name="model_id" ref="model_auditorialopd_auditoria"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form,calendar",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="Auditorias" id="auditorialopd.menu_root" web_icon="auditorialopd,static/description/icon.png"/>
+
+    <!-- menu categories -->
+    <menuitem name="Auditorias" id="auditorialopd.menu_1a" parent="auditorialopd.menu_root" sequence="1" action="auditorialopd.auditoria_action_window"/>
+    <menuitem name="Calendario" id="auditorialopd.menu_1b" parent="auditorialopd.menu_root" sequence="2" action="auditorialopd.auditoria_calendar_action_window"/>
+    <menuitem name="Clientes" id="auditorialopd.menu_2" parent="auditorialopd.menu_root" sequence="3" action="auditorialopd.cliente_action_window"/>
+
+    <!-- actions -->
+
+    <!--<menuitem name="List" id="auditorialopd.menu_1_list" parent="auditorialopd.menu_1"
+              action="auditorialopd.action_window"/>
+    <menuitem name="Server to list" id="auditorialopd" parent="auditorialopd.menu_2"
+              action="auditorialopd.action_server"/>-->
+
+  </data>
+</odoo>
